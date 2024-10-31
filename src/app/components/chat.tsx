@@ -160,7 +160,7 @@ export const Chat: React.FC = () => {
 
           {isBotTyping && (
             <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
-              Magasin's AI assistant is typing...
+              {"Magasin's AI assistant is typing..."}
             </div>
           )}
 
