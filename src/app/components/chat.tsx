@@ -152,15 +152,33 @@ export const Chat: React.FC = () => {
   if (!channel) return <div>Loading chat...</div>;
 
   return (
-    // Adjustments for the main layout
     <StreamChatComponent client={client} theme="messaging light">
       <Channel channel={channel}>
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100vh',
+            width: '100vw',
+            maxWidth: '100%',
+            margin: 0,
+            padding: 0,
+            boxSizing: 'border-box',
+          }}
+        >
           <Window>
             <ChannelHeader />
-
-            {/* Main message list area with flex-grow to use full height */}
-            <div style={{ flexGrow: 1, overflowY: 'auto' }}>
+            <div
+              style={{
+                flexGrow: 1,
+                overflowY: 'auto',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
               <MessageList Message={CustomMessage} />
             </div>
 
@@ -170,14 +188,22 @@ export const Chat: React.FC = () => {
               </div>
             )}
 
-            <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+            <div
+              style={{
+                position: 'sticky',
+                bottom: 0,
+                background: '#fff',
+                padding: '10px',
+                borderTop: '1px solid #ddd',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
+              <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+            </div>
           </Window>
         </div>
       </Channel>
     </StreamChatComponent>
-
-
-
-
   );
 };
