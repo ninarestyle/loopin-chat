@@ -41,57 +41,51 @@ const CustomMessage: React.FC = () => {
                         overflowX: 'auto',
                         padding: '10px 0',
                     }}>
-                        {message?.attachments && message.attachments.length > 0 && (
-                            <div style={{
-                                display: 'flex',
-                                gap: '20px', // Increase gap for spacing
-                                overflowX: 'auto',
-                                padding: '10px 0',
-                            }}>
-                                {message.attachments.map((attachment, index) => (
-                                    <div key={index} style={{ textAlign: 'center', minWidth: '250px', maxWidth: '300px' }}> {/* Increased width */}
-                                        <a
-                                            href={attachment.og_scrape_url || '#'}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style={{
-                                                display: 'inline-block',
-                                                textDecoration: 'none'
-                                            }}
-                                        >
-                                            <img
-                                                src={attachment.image_url || 'https://cdn-images.farfetch-contents.com/23/95/98/93/23959893_54010053_1000.jpg'}
-                                                alt={attachment.title || 'Image'}
-                                                style={{
-                                                    width: '100%', // Ensure image fills the container
-                                                    height: 'auto',
-                                                    objectFit: 'cover',
-                                                    borderRadius: '8px',
-                                                }}
-                                            />
-                                        </a>
-                                        {/* Display title below each image */}
-                                        <p style={{ fontSize: '16px', fontWeight: 'bold', marginTop: '8px' }}>
-                                            {typeof attachment.title === 'string' ? attachment.title : 'Untitled'}
-                                        </p>
-                                        {/* Display description below the title */}
-                                        {typeof attachment.description === 'string' && (
-                                            <p style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
-                                                {attachment.description}
-                                            </p>
-                                        )}
-
-                                    </div>
-                                ))}
+                        {message.attachments.map((attachment, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    textAlign: 'center',
+                                    minWidth: '200px', // Adjust minWidth for mobile
+                                    maxWidth: '250px', // Set maxWidth for mobile responsiveness
+                                }}
+                            >
+                                <a
+                                    href={attachment.og_scrape_url || '#'}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'inline-block',
+                                        textDecoration: 'none',
+                                    }}
+                                >
+                                    <img
+                                        src={attachment.image_url || 'https://cdn-images.farfetch-contents.com/23/95/98/93/23959893_54010053_1000.jpg'}
+                                        alt={attachment.title || 'Image'}
+                                        style={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            objectFit: 'cover',
+                                            borderRadius: '8px',
+                                            maxHeight: '200px', // Control max height for mobile
+                                        }}
+                                    />
+                                </a>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', marginTop: '8px' }}>
+                                    {typeof attachment.title === 'string' ? attachment.title : 'Untitled'}
+                                </p>
+                                {typeof attachment.description === 'string' && (
+                                    <p style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
+                                        {attachment.description}
+                                    </p>
+                                )}
                             </div>
-                        )}
-
+                        ))}
                     </div>
                 )}
             </div>
         </div>
     );
 };
-
 
 export default CustomMessage;
