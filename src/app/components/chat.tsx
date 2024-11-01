@@ -74,7 +74,7 @@ export const Chat: React.FC = () => {
       const resJson = await response.json();
       const payload = resJson?.data?.payload;
       const { channelId, token, authUserId } = payload;
-
+      console.log("channelId is", channelId)
       await client.connectUser(
         {
           id: authUserId,
@@ -152,21 +152,32 @@ export const Chat: React.FC = () => {
   if (!channel) return <div>Loading chat...</div>;
 
   return (
+    // Adjustments for the main layout
     <StreamChatComponent client={client} theme="messaging light">
       <Channel channel={channel}>
-        <Window>
-          <ChannelHeader />
-          <MessageList Message={CustomMessage} />
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%' }}>
+          <Window>
+            <ChannelHeader />
 
-          {isBotTyping && (
-            <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
-              {"Magasin's AI assistant is typing..."}
+            {/* Main message list area with flex-grow to use full height */}
+            <div style={{ flexGrow: 1, overflowY: 'auto' }}>
+              <MessageList Message={CustomMessage} />
             </div>
-          )}
 
-          <MessageInput overrideSubmitHandler={handleMessageSubmit} />
-        </Window>
+            {isBotTyping && (
+              <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
+                {"Magasin's AI assistant is typing..."}
+              </div>
+            )}
+
+            <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+          </Window>
+        </div>
       </Channel>
     </StreamChatComponent>
+
+
+
+
   );
 };
