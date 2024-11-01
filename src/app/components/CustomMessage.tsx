@@ -46,8 +46,8 @@ const CustomMessage: React.FC = () => {
                                 key={index}
                                 style={{
                                     textAlign: 'center',
-                                    minWidth: '200px', // Adjust minWidth for mobile
-                                    maxWidth: '250px', // Set maxWidth for mobile responsiveness
+                                    minWidth: '150px', // Reduced minWidth for smaller image size
+                                    maxWidth: '200px', // Reduced maxWidth for smaller image size
                                 }}
                             >
                                 <a
@@ -67,7 +67,7 @@ const CustomMessage: React.FC = () => {
                                             height: 'auto',
                                             objectFit: 'cover',
                                             borderRadius: '8px',
-                                            maxHeight: '200px', // Control max height for mobile
+                                            maxHeight: '150px', // Reduced maxHeight for smaller image size
                                         }}
                                     />
                                 </a>
