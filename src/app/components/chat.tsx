@@ -99,7 +99,7 @@ export const Chat: React.FC = () => {
 
     const text = message.text || "";
 
-    if (!isAuthenticated && messageCount >= 3) {
+    if (!isAuthenticated && messageCount >= 1) {
       handleGoogleLogin();
       return;
     }
