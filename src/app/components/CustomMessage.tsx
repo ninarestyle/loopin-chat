@@ -12,41 +12,46 @@ const CustomMessage: React.FC = () => {
       style={{
         display: 'flex',
         justifyContent: isBotMessage ? 'flex-start' : 'flex-end',
-        padding: '10px 0',
-        marginBottom: '20px',
+        padding: '8px 0',
+        marginBottom: '12px',
         width: '100%',
       }}
     >
       <div
         style={{
-          maxWidth: '60%',
-          padding: '10px',
-          borderRadius: '8px',
+          maxWidth: '85%', // Adjusted for mobile
+          padding: '8px',
+          borderRadius: '12px',
           backgroundColor: isBotMessage ? '#f1f0f0' : '#0078fe',
           color: isBotMessage ? '#333' : '#fff',
           textAlign: isBotMessage ? 'left' : 'right',
+          wordWrap: 'break-word',
         }}
       >
-        <p style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '4px' }}>
+        <p style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
           {message.user?.name || 'Anonymous'}
         </p>
 
-        {/* Render message text with HTML content */}
         <div
-          style={{ fontSize: '16px', lineHeight: '1.4' }}
+          style={{ fontSize: '14px', lineHeight: '1.4' }}
           dangerouslySetInnerHTML={{ __html: message?.text || '' }}
         />
 
-        {/* Render attachments if present */}
         {message?.attachments && message.attachments.length > 0 && (
-          <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', padding: '10px 0' }}>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '10px',
+            overflowX: 'auto',
+            padding: '8px 0',
+          }}>
             {message.attachments.map((attachment, index) => (
               <div
                 key={index}
                 style={{
                   textAlign: 'center',
-                  minWidth: '150px',
-                  maxWidth: '200px',
+                  minWidth: '120px',
+                  maxWidth: '150px',
                 }}
               >
                 <a
@@ -63,15 +68,15 @@ const CustomMessage: React.FC = () => {
                       height: 'auto',
                       objectFit: 'cover',
                       borderRadius: '8px',
-                      maxHeight: '150px',
+                      maxHeight: '120px',
                     }}
                   />
                 </a>
-                <p style={{ fontSize: '16px', fontWeight: 'bold', marginTop: '8px' }}>
+                <p style={{ fontSize: '13px', fontWeight: 'bold', marginTop: '4px' }}>
                   {typeof attachment.title === 'string' ? attachment.title : 'Untitled'}
                 </p>
                 {typeof attachment.description === 'string' && (
-                  <p style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
                     {attachment.description}
                   </p>
                 )}
