@@ -1,13 +1,8 @@
-import { Chat } from '@/app/components/chat';
-import React from 'react';
+// app/page.tsx
 
+import { redirect } from 'next/navigation';
 
-const Home: React.FC = () => {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Chat />
-    </div>
-  );
-};
-
-export default Home;
+export default function Home() {
+  // Redirect to /magasin when visiting the root URL
+  redirect('/magasin');
+}
