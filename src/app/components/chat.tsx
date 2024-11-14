@@ -39,16 +39,21 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   // Adjust viewport height on mobile
   useEffect(() => {
     const adjustHeight = () => {
-      document.body.style.height = `${window.innerHeight}px`;
+      const viewportHeight = window.innerHeight;
+      document.body.style.height = `${viewportHeight}px`;
+      window.scrollTo(0, document.body.scrollHeight);
     };
-
+  
     window.addEventListener('resize', adjustHeight);
     adjustHeight();
-
+  
+    // Cleanup on unmount
     return () => {
       window.removeEventListener('resize', adjustHeight);
     };
   }, []);
+  
+  
 
   // Initialize chat when the influencerName changes
   useEffect(() => {
@@ -236,14 +241,17 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
 
             <div
               style={{
-                position: 'sticky',
+                position: 'fixed',
                 bottom: 'env(safe-area-inset-bottom)',
+                left: 0,
+                right: 0,
                 background: '#fff',
                 padding: '8px 10px',
                 paddingBottom: 'env(safe-area-inset-bottom)',
                 borderTop: '1px solid #ddd',
                 width: '100%',
                 boxSizing: 'border-box',
+                zIndex: 10, // Ensure it stays above other content
               }}
             >
               <MessageInput overrideSubmitHandler={handleMessageSubmit} />
