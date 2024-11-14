@@ -195,7 +195,9 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
               AI Assistant is typing...
             </div>
           )}
-          <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+          <div style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
+            <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+          </div>
         </Window>
       </Channel>
     </StreamChatComponent>

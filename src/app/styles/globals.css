@@ -1,14 +1,7 @@
-/* globals.css */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 html, body {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: auto; /* Change from hidden to auto */
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
 }
@@ -24,28 +17,18 @@ html, body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
-.custom-message {
-    font-size: 14px;
-    line-height: 1.5;
-    overflow: visible;
-    word-break: break-word;
-}
-
+/* Remove fixed positioning */
 input[type="text"] {
     font-size: 16px;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    width: calc(100% - 24px);
-    margin: 12px;
+    width: 100%;
+    margin: 12px 0;
     box-sizing: border-box;
-    position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 16px);
-    left: 0;
-    right: 0;
     background: #fff;
-    z-index: 10;
+    position: relative; /* Change from fixed to relative */
 }
