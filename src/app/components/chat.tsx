@@ -186,20 +186,57 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   return (
     <StreamChatComponent client={client!} theme="messaging light">
       <Channel channel={channel}>
-        <Window>
-          <ChannelHeader />
-          <MessageList Message={CustomMessage} />
-          {/* Typing Indicator */}
-          {isBotTyping && (
-            <div style={{ padding: '10px', textAlign: 'left', fontStyle: 'italic', color: '#888' }}>
-              AI Assistant is typing...
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100vh',
+            width: '100vw',
+            maxWidth: '100%',
+            margin: 0,
+            padding: 0,
+            boxSizing: 'border-box',
+          }}
+        >
+          <Window>
+            <ChannelHeader />
+            <div
+              style={{
+                flexGrow: 1,
+                overflowY: 'auto',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
+              <MessageList Message={CustomMessage} />
             </div>
-          )}
-          <div style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
-            <MessageInput overrideSubmitHandler={handleMessageSubmit} />
-          </div>
-        </Window>
+
+            {isBotTyping && (
+              <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
+                {"Magasin's AI assistant is typing..."}
+              </div>
+            )}
+
+            <div
+              style={{
+                position: 'sticky',
+                bottom: 0,
+                background: '#fff',
+                padding: '10px',
+                borderTop: '1px solid #ddd',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
+              <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+            </div>
+          </Window>
+        </div>
       </Channel>
     </StreamChatComponent>
+
   );
 };
