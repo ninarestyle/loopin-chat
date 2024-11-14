@@ -241,7 +241,13 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
 
 
             {isBotTyping && (
-              <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
+              <div style={{ 
+                padding: '10px', 
+                color: '#555', 
+                textAlign: 'left',
+                position: 'fixed',
+                bottom: '70px', // Place it above the input box
+                }}>
                 {"AI assistant is typing..."}
               </div>
             )}
