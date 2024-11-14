@@ -38,21 +38,25 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
 
   // Adjust viewport height on mobile
   useEffect(() => {
-    const adjustHeight = () => {
+    const adjustContentHeight = () => {
       const viewportHeight = window.innerHeight;
-      document.body.style.height = `${viewportHeight}px`;
+      const chatContent = document.querySelector('.chat-content');
+
+      if (chatContent instanceof HTMLElement) {
+        chatContent.style.height = `${viewportHeight - 70}px`;
+      }
+      
+      // Scroll to the bottom to ensure the latest message is visible
       window.scrollTo(0, document.body.scrollHeight);
     };
   
-    window.addEventListener('resize', adjustHeight);
-    adjustHeight();
+    window.addEventListener('resize', adjustContentHeight);
+    adjustContentHeight();
   
-    // Cleanup on unmount
     return () => {
-      window.removeEventListener('resize', adjustHeight);
+      window.removeEventListener('resize', adjustContentHeight);
     };
   }, []);
-  
   
 
   // Initialize chat when the influencerName changes
@@ -220,18 +224,21 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
           <Window>
             <ChannelHeader />
             <div
+              className="chat-content"
               style={{
-                flexGrow: 1,
-                overflowY: 'auto',
+                flex: 1,
+                overflowY: 'scroll', // Ensures scrolling if content overflows
                 padding: '10px',
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100%',
+                height: 'calc(100vh - env(safe-area-inset-bottom) - 70px)', // Adjust height based on input box
+                maxHeight: 'calc(100vh - env(safe-area-inset-bottom) - 70px)',
                 boxSizing: 'border-box',
               }}
             >
               <MessageList Message={CustomMessage} />
             </div>
+
 
             {isBotTyping && (
               <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
