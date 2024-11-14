@@ -36,6 +36,20 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   const [isChatInitializing, setIsChatInitializing] = useState<boolean>(false);
   const [isBotTyping, setIsBotTyping] = useState<boolean>(false);
 
+  // Adjust viewport height on mobile
+  useEffect(() => {
+    const adjustHeight = () => {
+      document.body.style.height = `${window.innerHeight}px`;
+    };
+
+    window.addEventListener('resize', adjustHeight);
+    adjustHeight();
+
+    return () => {
+      window.removeEventListener('resize', adjustHeight);
+    };
+  }, []);
+
   // Initialize chat when the influencerName changes
   useEffect(() => {
     const initializeChat = async () => {
@@ -190,7 +204,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
           style={{
             display: 'flex',
             flexDirection: 'column',
-            height: '100vh',
+            height: 'calc(100% - env(safe-area-inset-bottom))', // Updated line
             width: '100vw',
             maxWidth: '100%',
             margin: 0,
@@ -216,7 +230,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
 
             {isBotTyping && (
               <div style={{ padding: '10px', color: '#555', textAlign: 'left' }}>
-                {"Magasin's AI assistant is typing..."}
+                {"AI assistant is typing..."}
               </div>
             )}
 
@@ -238,6 +252,5 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
         </div>
       </Channel>
     </StreamChatComponent>
-
   );
 };
