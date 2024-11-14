@@ -223,9 +223,10 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
             <div
               style={{
                 position: 'sticky',
-                bottom: 0,
+                bottom: 'env(safe-area-inset-bottom)',
                 background: '#fff',
-                padding: '10px',
+                padding: '8px 10px',
+                paddingBottom: 'env(safe-area-inset-bottom)',
                 borderTop: '1px solid #ddd',
                 width: '100%',
                 boxSizing: 'border-box',
