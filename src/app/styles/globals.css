@@ -3,15 +3,49 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  body {
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
-  }
-  
-  .custom-message {
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+}
+
+.custom-message {
     font-size: 14px;
     line-height: 1.5;
-  }
-  
+    overflow: visible;
+    word-break: break-word;
+}
+
+input[type="text"] {
+    font-size: 16px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: calc(100% - 24px);
+    margin: 12px;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom) + 16px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 10;
+}

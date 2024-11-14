@@ -11,21 +11,24 @@ const CustomMessage: React.FC = () => {
       className="custom-message"
       style={{
         display: 'flex',
-        justifyContent: isBotMessage ? 'flex-start' : 'flex-end',
-        padding: '8px 0',
+        flexDirection: 'column',
+        alignItems: isBotMessage ? 'flex-start' : 'flex-end',
+        padding: '8px 16px',
         marginBottom: '12px',
         width: '100%',
+        maxWidth: '100vw', // Ensures no overflow on mobile
       }}
     >
       <div
         style={{
           maxWidth: '85%', // Adjusted for mobile
-          padding: '8px',
+          padding: '12px',
           borderRadius: '12px',
           backgroundColor: isBotMessage ? '#f1f0f0' : '#0078fe',
           color: isBotMessage ? '#333' : '#fff',
           textAlign: isBotMessage ? 'left' : 'right',
           wordWrap: 'break-word',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         }}
       >
         <p style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
