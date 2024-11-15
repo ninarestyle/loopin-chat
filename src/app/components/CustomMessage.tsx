@@ -16,7 +16,7 @@ const CustomMessage: React.FC = () => {
         padding: '8px 16px',
         marginBottom: '12px',
         width: '100%',
-        maxWidth: '100vw', // Ensures no overflow on mobile
+        maxWidth: '100vw',
       }}
     >
       <div

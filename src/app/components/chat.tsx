@@ -229,6 +229,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
                 flex: 1,
                 overflowY: 'scroll', // Ensures scrolling if content overflows
                 padding: '10px',
+                paddingBottom: '50px', 
                 display: 'flex',
                 flexDirection: 'column',
                 height: 'calc(100vh - env(safe-area-inset-bottom) - 70px)', // Adjust height based on input box
