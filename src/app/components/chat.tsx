@@ -38,7 +38,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   const [messageCount, setMessageCount] = useState<number>(0);
   const [isChatInitializing, setIsChatInitializing] = useState<boolean>(false);
   const [isBotTyping, setIsBotTyping] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>('Magasin');
+  //const [selectedOption, setSelectedOption] = useState<string>('Magasin');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   const toggleSidebar = () => {
@@ -204,7 +204,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
     router.push(option.route);
 
     // Update the selected option
-    setSelectedOption(option.label);
+    //setSelectedOption(option.label);
   };
   
   const handleMessageSubmit = async (

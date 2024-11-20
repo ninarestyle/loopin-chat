@@ -95,7 +95,7 @@ export default function AuthSuccess ()
             setLoading( false );
             setError( 'Missing required authentication information. Please try again.' );
         }
-    }, [ router.isReady ] ); // Wait for `router.isReady` before accessing `router.query`
+    }, [router, router.isReady]); 
 
     if ( loading )
     {
