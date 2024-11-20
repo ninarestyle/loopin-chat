@@ -4,87 +4,50 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: auto; /* Ensures scrolling on mobile */
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
+    overflow: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
 }
 
-/* Root container to occupy full viewport height */
+/* Root container */
 #root {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-/* Chat container for flexible layout */
-.chat-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding-bottom: env(safe-area-inset-bottom); /* Adjust for iOS safe area */
-}
-/* Collapsed sidebar */
-.sidebar.collapsed {
-    max-width: 0;
-    overflow: hidden;
-    padding: 0;
-    transition: max-width 0.3s ease, padding 0.3s ease;
-}
-
-/* Expanded sidebar */
-.sidebar.expanded {
-    max-width: 250px;
-    padding: 20px;
-    transition: max-width 0.3s ease, padding 0.3s ease;
-}
-
-/* Sidebar (content at the top) */
 /* Sidebar */
 .sidebar {
-    position: fixed; /* Fix it to the left side of the viewport */
+    position: fixed;
     top: 0;
     left: 0;
-    width: 20%; /* Make it flexible, adjust width as a percentage */
-    max-width: 300px; /* Set a maximum width for larger screens */
-    min-width: 150px; /* Set a minimum width for smaller screens */
+    width: 20%; /* Flexible width */
+    max-width: 300px; /* For larger screens */
+    min-width: 150px; /* For smaller screens */
     height: 100%;
     background: #f4f4f4;
     padding: 20px;
     box-sizing: border-box;
-    transition: transform 0.3s ease; /* Smooth slide animation */
-    z-index: 10; /* Above the chat content */
+    transition: transform 0.3s ease, max-width 0.3s ease;
+    z-index: 10;
+    overflow-y: auto; /* Allow scrolling for sidebar content */
 }
 
-/* Sidebar collapsed */
 .sidebar.collapsed {
-    transform: translateX(-100%); /* Slide out of view */
+    transform: translateX(-100%);
 }
 
-/* Sidebar expanded */
 .sidebar.expanded {
-    transform: translateX(0); /* Slide into view */
+    transform: translateX(0);
 }
 
-/* Chat container */
-.chat-container {
-    margin-left: 20%; /* Match sidebar width */
-    transition: margin-left 0.3s ease; /* Smooth transition */
-}
-
-/* Adjust chat container when sidebar is flexible */
-.sidebar.collapsed + .chat-container {
-    margin-left: 0; /* Reset when sidebar is collapsed */
-}
-
-
-/* Sidebar toggle button at the top right */
+/* Sidebar toggle button */
 .sidebar-toggle {
     position: fixed;
-    top: 20px; /* Move to the top */
-    right: 20px; /* Move to the right */
-    z-index: 11; /* Ensure visibility above all elements */
+    top: 20px;
+    right: 20px;
+    z-index: 11;
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 50%;
@@ -95,48 +58,43 @@ html, body {
     align-items: center;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
 }
 
 .sidebar-toggle:hover {
     background: #f0f0f0;
 }
 
-
-/* Chat container (shift right when sidebar is expanded) */
+/* Chat container */
 .chat-container {
-    margin-left: 250px; /* Match sidebar width */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20%; /* Default space for sidebar */
+    height: calc(100vh - 70px); /* Adjust for header */
+    overflow-y: auto; /* Scrollable content */
     transition: margin-left 0.3s ease;
 }
 
 .chat-container.collapsed {
-    margin-left: 0; /* No margin when sidebar is collapsed */
+    margin-left: 0;
 }
 
-
-/* Ensure chat container takes full height minus header */
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 70px); /* Adjust for header height */
-    overflow: hidden; /* Prevent content from overflowing */
-}
-
-/* Ensure MessageList scrolls properly */
+/* Message List */
 .message-list {
-    flex: 1; /* Fills available space */
-    overflow-y: auto; /* Enables scrolling */
+    flex: 1; /* Fill remaining space */
+    overflow-y: auto;
 }
 
-/* Ensure MessageInput stays at the bottom */
+/* Message Input */
 .message-input {
-    flex-shrink: 0; /* Prevents shrinking */
-    background: #fff; /* Match the design */
+    flex-shrink: 0;
+    background: #fff;
     border-top: 1px solid #ddd;
     padding: 10px;
 }
 
-
-/* Message input box */
+/* Input Box */
 input[type="text"] {
     font-size: 16px;
     padding: 12px;
@@ -146,10 +104,10 @@ input[type="text"] {
     margin: 12px 0;
     box-sizing: border-box;
     background: #fff;
-    position: relative; /* Adjust to relative to prevent overlapping */
+    position: relative;
 }
 
-/* Typing indicator */
+/* Typing Indicator */
 .typing-indicator {
     padding: 10px;
     font-size: 14px;
@@ -157,11 +115,12 @@ input[type="text"] {
     text-align: center;
 }
 
-/* Responsive design for mobile */
+/* Responsive Design for Mobile */
 @media (max-width: 768px) {
     .sidebar {
-        max-width: 100%;
-        border-right: none;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
     }
 
     .sidebar li {
@@ -169,12 +128,12 @@ input[type="text"] {
         padding: 8px;
     }
 
+    .chat-container {
+        padding-bottom: 20px; /* Additional spacing for mobile */
+    }
+
     input[type="text"] {
         font-size: 14px;
         padding: 10px;
-    }
-
-    .chat-container {
-        padding-bottom: 20px; /* Additional padding for mobile */
     }
 }
