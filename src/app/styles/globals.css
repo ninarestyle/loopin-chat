@@ -98,14 +98,28 @@ html, body {
 }
 
 
-/* Chat message area */
-.chat-content {
-    flex: 1;
+/* Ensure chat container takes full height minus header */
+.chat-container {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    height: calc(100vh - 70px); /* Ensure the content adapts dynamically */
+    height: calc(100vh - 70px); /* Adjust for header height */
+    overflow: hidden; /* Prevent content from overflowing */
 }
+
+/* Ensure MessageList scrolls properly */
+.message-list {
+    flex: 1; /* Fills available space */
+    overflow-y: auto; /* Enables scrolling */
+}
+
+/* Ensure MessageInput stays at the bottom */
+.message-input {
+    flex-shrink: 0; /* Prevents shrinking */
+    background: #fff; /* Match the design */
+    border-top: 1px solid #ddd;
+    padding: 10px;
+}
+
 
 /* Message input box */
 input[type="text"] {
