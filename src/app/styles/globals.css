@@ -40,69 +40,63 @@ html, body {
     transition: max-width 0.3s ease, padding 0.3s ease;
 }
 
-/* Toggle button for the sidebar */
-.sidebar-toggle {
+/* Sidebar (content at the top) */
+.sidebar {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 250px; /* Width of the sidebar */
+    height: 100%;
+    background: #f4f4f4;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+    z-index: 10; /* Ensure it overlays other elements */
+}
+
+/* Sidebar collapsed (slides out of view) */
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+/* Sidebar expanded (fully visible) */
+.sidebar.expanded {
+    transform: translateX(0);
+}
+
+/* Sidebar toggle button at the bottom */
+.sidebar-toggle {
+    position: fixed;
+    bottom: 20px; /* Place above safe area for mobile */
+    left: 20px; /* Slightly inset from the edge */
+    z-index: 11;
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-toggle:hover {
-    background: #f4f4f4;
+    background: #f0f0f0;
 }
 
 
-/* Sidebar for options */
-.sidebar {
-    width: 100%;
-    max-width: 250px;
-    background: #f4f4f4;
-    padding: 20px;
-    box-sizing: border-box;
-    border-right: 1px solid #ddd;
+/* Chat container (shift right when sidebar is expanded) */
+.chat-container {
+    margin-left: 250px; /* Match sidebar width */
+    transition: margin-left 0.3s ease;
 }
 
-.sidebar h3 {
-    margin: 0 0 12px;
-    font-size: 18px;
-    color: #333;
+.chat-container.collapsed {
+    margin-left: 0; /* No margin when sidebar is collapsed */
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar li {
-    padding: 10px;
-    margin: 10px 0;
-    cursor: pointer;
-    background: #fff;
-    border-radius: 5px;
-    font-size: 14px;
-    color: #333;
-    transition: background 0.3s;
-}
-
-.sidebar li:hover {
-    background: #eee;
-}
-
-.sidebar li.active {
-    background: #ddd;
-}
 
 /* Chat message area */
 .chat-content {

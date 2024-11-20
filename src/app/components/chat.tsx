@@ -265,22 +265,12 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   };
 
   if (!channel) return <div>Loading chat...</div>;
-
   return (
-    <div style={{ display: 'flex', height: '100vh', position: 'relative' }}>
-        {/* Toggle Button */}
-        <div
-            className="sidebar-toggle"
-            onClick={toggleSidebar}
-            title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-        >
-            {isSidebarCollapsed ? "☰" : "×"}
-        </div>
-
+    <div style={{ height: '100vh', display: 'flex', position: 'relative' }}>
         {/* Sidebar */}
         <div className={`sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`}>
-            <h3>Loopin AI Shopping Assistant can help you with</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+            <h3>Options</h3>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {options.map((option) => (
                     <li
                         key={option.label}
@@ -288,7 +278,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
                             padding: '10px',
                             margin: '10px 0',
                             cursor: 'pointer',
-                            background: selectedOption === option.label ? '#ddd' : '#fff',
+                            background: '#fff',
                             borderRadius: '5px',
                         }}
                         onClick={() => handleOptionClick(option)}
@@ -299,17 +289,30 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
             </ul>
         </div>
 
-        {/* Chat Component */}
-        <StreamChatComponent client={client!} theme="messaging light">
-            <Channel channel={channel}>
-                <Window>
-                    <ChannelHeader />
-                    <MessageList Message={CustomMessage} />
-                    {isBotTyping && <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>}
-                    <MessageInput overrideSubmitHandler={handleMessageSubmit} />
-                </Window>
-            </Channel>
-        </StreamChatComponent>
+        {/* Chat Content */}
+        <div className={`chat-container ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+            <StreamChatComponent client={client!} theme="messaging light">
+                <Channel channel={channel}>
+                    <Window>
+                        <ChannelHeader />
+                        <MessageList Message={CustomMessage} />
+                        {isBotTyping && (
+                            <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>
+                        )}
+                        <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+                    </Window>
+                </Channel>
+            </StreamChatComponent>
+        </div>
+
+        {/* Sidebar Toggle Button */}
+        <div
+            className="sidebar-toggle"
+            onClick={toggleSidebar}
+            title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+        >
+            {isSidebarCollapsed ? '☰' : '×'}
+        </div>
     </div>
 );
 
