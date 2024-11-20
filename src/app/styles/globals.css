@@ -117,7 +117,7 @@ html, body {
     flex-shrink: 0; /* Prevents shrinking */
     background: #fff; /* Match the design */
     border-top: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px;
 }
 
 
