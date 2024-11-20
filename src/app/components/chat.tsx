@@ -71,7 +71,6 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   //   }
   // };
 
-  // Adjust viewport height on mobile
   useEffect(() => {
     const adjustContentHeight = () => {
       const viewportHeight = window.innerHeight;
