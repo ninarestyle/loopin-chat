@@ -64,12 +64,12 @@ html, body {
     transform: translateX(0);
 }
 
-/* Sidebar toggle button at the bottom */
+/* Sidebar toggle button at the top right */
 .sidebar-toggle {
     position: fixed;
-    bottom: 20px; /* Place above safe area for mobile */
-    left: 20px; /* Slightly inset from the edge */
-    z-index: 11;
+    top: 20px; /* Move to the top */
+    right: 20px; /* Move to the right */
+    z-index: 11; /* Ensure visibility above all elements */
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 50%;
@@ -85,6 +85,7 @@ html, body {
 .sidebar-toggle:hover {
     background: #f0f0f0;
 }
+
 
 /* Chat container (shift right when sidebar is expanded) */
 .chat-container {
@@ -117,7 +118,6 @@ html, body {
     background: #fff; /* Match the design */
     border-top: 1px solid #ddd;
     padding: 10px;
-    margin-bottom: 16px; /* Move the input box slightly up */
 }
 
 
