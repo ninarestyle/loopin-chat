@@ -86,7 +86,6 @@ html, body {
     background: #f0f0f0;
 }
 
-
 /* Chat container (shift right when sidebar is expanded) */
 .chat-container {
     margin-left: 250px; /* Match sidebar width */
@@ -117,7 +116,8 @@ html, body {
     flex-shrink: 0; /* Prevents shrinking */
     background: #fff; /* Match the design */
     border-top: 1px solid #ddd;
-    padding: 12px;
+    padding: 10px;
+    margin-bottom: 16px; /* Move the input box slightly up */
 }
 
 
