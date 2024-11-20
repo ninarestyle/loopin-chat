@@ -25,6 +25,43 @@ html, body {
     overflow-y: auto;
     padding-bottom: env(safe-area-inset-bottom); /* Adjust for iOS safe area */
 }
+/* Collapsed sidebar */
+.sidebar.collapsed {
+    max-width: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: max-width 0.3s ease, padding 0.3s ease;
+}
+
+/* Expanded sidebar */
+.sidebar.expanded {
+    max-width: 250px;
+    padding: 20px;
+    transition: max-width 0.3s ease, padding 0.3s ease;
+}
+
+/* Toggle button for the sidebar */
+.sidebar-toggle {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-toggle:hover {
+    background: #f4f4f4;
+}
+
 
 /* Sidebar for options */
 .sidebar {

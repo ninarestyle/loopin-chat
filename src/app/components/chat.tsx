@@ -39,7 +39,11 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   const [isChatInitializing, setIsChatInitializing] = useState<boolean>(false);
   const [isBotTyping, setIsBotTyping] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('Magasin');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
+  const toggleSidebar = () => {
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
   // // Function to handle Gmail promotions integration
   // const manageGmailPromotions = async () => {
   //   try {
@@ -263,41 +267,50 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   if (!channel) return <div>Loading chat...</div>;
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      {/* Sidebar */}
-      <div style={{ width: '250px', background: '#f4f4f4', padding: '20px', boxSizing: 'border-box' }}>
-        <h3>Loopin AI Shopping Assistant can help you with</h3>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {options.map((option) => (
-            <li
-              key={option.label}
-              style={{
-                padding: '10px',
-                margin: '10px 0',
-                cursor: 'pointer',
-                background: selectedOption === option.label ? '#ddd' : '#fff',
-                borderRadius: '5px',
-              }}
-              onClick={() => handleOptionClick(option)}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div style={{ display: 'flex', height: '100vh', position: 'relative' }}>
+        {/* Toggle Button */}
+        <div
+            className="sidebar-toggle"
+            onClick={toggleSidebar}
+            title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        >
+            {isSidebarCollapsed ? "☰" : "×"}
+        </div>
 
-      {/* Chat Component */}
-      <StreamChatComponent client={client!} theme="messaging light">
-        <Channel channel={channel}>
-          <Window>
-            <ChannelHeader />
-            <MessageList Message={CustomMessage} />
-            {isBotTyping && <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>}
-            <MessageInput overrideSubmitHandler={handleMessageSubmit} />
-          </Window>
-        </Channel>
-      </StreamChatComponent>
+        {/* Sidebar */}
+        <div className={`sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`}>
+            <h3>Loopin AI Shopping Assistant can help you with</h3>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+                {options.map((option) => (
+                    <li
+                        key={option.label}
+                        style={{
+                            padding: '10px',
+                            margin: '10px 0',
+                            cursor: 'pointer',
+                            background: selectedOption === option.label ? '#ddd' : '#fff',
+                            borderRadius: '5px',
+                        }}
+                        onClick={() => handleOptionClick(option)}
+                    >
+                        {option.label}
+                    </li>
+                ))}
+            </ul>
+        </div>
+
+        {/* Chat Component */}
+        <StreamChatComponent client={client!} theme="messaging light">
+            <Channel channel={channel}>
+                <Window>
+                    <ChannelHeader />
+                    <MessageList Message={CustomMessage} />
+                    {isBotTyping && <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>}
+                    <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+                </Window>
+            </Channel>
+        </StreamChatComponent>
     </div>
-  );
+);
 
 };
