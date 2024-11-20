@@ -5,5 +5,6 @@ export default function handler(req, res) {
     scope: ['profile', 'email', 'openid'],
     accessType: 'offline', // Request offline access to get a refresh token
     prompt: 'consent', // Prompt for consent to get a new refresh token and idToken
+    includeGrantedScopes: true, // This enables incremental authorization
   })(req, res);
 }

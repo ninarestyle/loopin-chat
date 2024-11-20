@@ -12,7 +12,6 @@ passport.use(
     },
     (accessToken, refreshToken, params, profile, done) => {
       try {
-        // Ensure profile is defined before attaching values
         if (profile) {
           profile.accessToken = accessToken;
           profile.refreshToken = refreshToken;
@@ -38,10 +37,12 @@ passport.use(
 
 // Serialize and deserialize user
 passport.serializeUser((user, done) => {
+  console.log('Serialize User:', user);
   done(null, user);
 });
 
 passport.deserializeUser((obj, done) => {
+  console.log('deserialize User:', user);
   done(null, obj);
 });
 

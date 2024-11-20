@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { updateAccessTokenInDB, setupGmailWatch } from '../../src/services/authService';
 
 export default function AuthSuccess ()
 {
@@ -9,11 +10,14 @@ export default function AuthSuccess ()
 
     useEffect( () =>
     {
+        // Wait for `router.isReady` before accessing query parameters
+        if ( !router.isReady ) return;
+
         // Extract tokens from query parameters
-        const { accessToken, idToken, profileURL } = router.query;
+        const { accessToken, idToken, profileURL, refreshToken } = router.query;
         const clientType = 1;
 
-        if ( accessToken && idToken )
+        if ( accessToken && idToken && refreshToken )
         {
             // Make a POST request to exchange the Google access token for a JWT
             fetch( `${process.env.NEXT_PUBLIC_APP_URL}/auth/google/token`, {
@@ -25,7 +29,7 @@ export default function AuthSuccess ()
                     accessToken,
                     idToken,
                     profileURL,
-                    clientType
+                    clientType,
                 } ),
             } )
                 .then( ( response ) =>
@@ -36,24 +40,44 @@ export default function AuthSuccess ()
                     }
                     return response.json(); // Parse JSON from response
                 } )
-                .then( ( data ) =>
+                .then( async ( data ) =>
                 {
                     const responseData = data.data?.payload;
                     // Check if JWT token and user profile are present
                     if ( responseData && responseData.jwt )
                     {
-                        localStorage.setItem( 'jwtToken', responseData.jwt );
+                        const jwtToken = responseData.jwt;
                         const user = responseData.user;
-                        const userName = user.name || "Guest User";
+                        const userName = user.name || 'Guest User';
 
-                        // Save the userName in localStorage
+                        // Save the JWT token and user info in localStorage
+                        localStorage.setItem( 'jwtToken', jwtToken );
                         localStorage.setItem( 'userName', userName );
-                        // Update localStorage with the authenticated userId
-                        localStorage.setItem( "userId", user.id );
+                        localStorage.setItem( 'userId', user.id );
+
+                        console.log("google access token", user.googleAccessToken)
+                        if ( user.googleAccessToken && user.googleAccessToken.length > 0 )
+                        {
+                            localStorage.setItem( 'accessTokenAvailable', 'true' ); // Store it as a string
+                        }
+
+                        // Call `updateAccessTokenInDB` to update the access token in the backend
+                        const isUpdated = await updateAccessTokenInDB( accessToken, refreshToken, jwtToken );
+                        if ( !isUpdated )
+                        {
+                            console.error( 'Failed to update access token in the backend.' );
+                            setError( 'Failed to update access token. Please try again.' );
+                            setLoading( false );
+                            return;
+                        }
+
+                        // Call setupGmailWatch to register for Gmail push notifications
+                        await setupGmailWatch();
+
                         // Set loading to false after successful data handling
                         setLoading( false );
 
-                        // Redirect the user after successful login
+                        // Redirect the user after successful login and update
                         router.push( '/' );
                     } else
                     {
@@ -66,13 +90,12 @@ export default function AuthSuccess ()
                     setError( 'Authentication failed. Please try again.' );
                     setLoading( false );
                 } );
-
         } else
         {
             setLoading( false );
             setError( 'Missing required authentication information. Please try again.' );
         }
-    }, [ router, router.query ] ); // Add `router` to the dependency array
+    }, [ router.isReady ] ); // Wait for `router.isReady` before accessing `router.query`
 
     if ( loading )
     {
@@ -86,7 +109,7 @@ export default function AuthSuccess ()
 
     return (
         <div className="success-message">
-            <p>Welcome, {userName}!</p>
+            <p>Welcome, {localStorage.getItem( 'userName' )}!</p>
             <p>You have successfully logged in.</p>
         </div>
     );

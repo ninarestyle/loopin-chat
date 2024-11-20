@@ -14,6 +14,8 @@ import {
 } from 'stream-chat-react';
 import 'stream-chat-react/dist/css/v2/index.css';
 import CustomMessage from './CustomMessage';
+import { useRouter } from 'next/navigation';
+
 
 export enum LisaRole {
   stylist = 0,
@@ -26,6 +28,7 @@ const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY || '';
 const lisaRoleMap: Record<string, number> = {
   Magasin: LisaRole.magasin,
   Junjunsquare: LisaRole.jjs,
+  Deals: LisaRole.deals
 };
 
 export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ influencerName, imageUrl }) => {
@@ -35,6 +38,38 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   const [messageCount, setMessageCount] = useState<number>(0);
   const [isChatInitializing, setIsChatInitializing] = useState<boolean>(false);
   const [isBotTyping, setIsBotTyping] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>('Magasin');
+
+  // // Function to handle Gmail promotions integration
+  // const manageGmailPromotions = async () => {
+  //   try {
+  //     // Check if the user is already authenticated
+  //     const jwtToken = localStorage.getItem('jwtToken');
+  //     // Check if the user is already authenticated
+  //     const accessTokenAvailable = localStorage.getItem('accessTokenAvailable');
+  //     // User is not logged in, redirect them to Google OAuth login
+  //     const currentUrl = window.location.href;
+
+  //     if (!jwtToken) {
+  //       alert("Please log in first to continue managing Gmail promotions.")
+  //       // Redirect to Google OAuth login with the current URL as redirectUrl
+  //       window.location.href = `/api/auth/google?redirectUrl=${encodeURIComponent(currentUrl)}`;
+  //       return;
+  //     }
+  //     // User is logged in, proceed with requesting Gmail API access
+  //     if (!accessTokenAvailable) {
+  //       alert("Redirecting you to grant Gmail API access.");
+  //       const baseUrl = window.location.origin; 
+  //       const redirectUrl = `${baseUrl}/deals`; 
+        
+  //       window.location.href = `/api/auth/google/incremental?redirectUrl=${encodeURIComponent(redirectUrl)}`;
+  //     }
+
+  //   } catch (error) {
+  //     console.error('Error during Gmail integration:', error);
+  //     alert('Failed to integrate Gmail. Please try again.');
+  //   }
+  // };
 
   // Adjust viewport height on mobile
   useEffect(() => {
@@ -45,19 +80,19 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
       if (chatContent instanceof HTMLElement) {
         chatContent.style.height = `${viewportHeight - 70}px`;
       }
-      
+
       // Scroll to the bottom to ensure the latest message is visible
       window.scrollTo(0, document.body.scrollHeight);
     };
-  
+
     window.addEventListener('resize', adjustContentHeight);
     adjustContentHeight();
-  
+
     return () => {
       window.removeEventListener('resize', adjustContentHeight);
     };
   }, []);
-  
+
 
   // Initialize chat when the influencerName changes
   useEffect(() => {
@@ -84,7 +119,6 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
 
         // Create a new client instance
         const newClient = StreamChat.getInstance(apiKey);
-        console.log("influencer name", influencerName);
 
         // Fetch channel information from the backend
         const requestBody = {
@@ -109,7 +143,7 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
 
         const resJson = await response.json();
         const payload = resJson?.data?.payload;
-        console.log("payload", payload);
+
         const { channelId, token, authUserId } = payload;
 
         // Connect the user using `authUserId` and `token` from the backend response
@@ -146,7 +180,30 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
       }
     };
   }, [influencerName]);
+  // Inside the Chat component
+  const router = useRouter();
 
+  // Define options in one place
+  const options = [
+    { label: 'Discover recommendations from Magasin', route: '/magasin' },
+    { label: `Check out JunJun's favorites`, route: '/junjunsquare' },
+    // { label: 'Manage 2024 holiday promotions', route: '/deals', action: manageGmailPromotions },
+  ];
+
+  // Handle option clicks
+  const handleOptionClick = async (option: typeof options[number]) => {
+    // Call the action if it exists (e.g., manageGmailPromotions)
+    // if (option.action) {
+    //   await option.action();
+    // }
+
+    // Navigate to the associated route
+    router.push(option.route);
+
+    // Update the selected option
+    setSelectedOption(option.label);
+  };
+  
   const handleMessageSubmit = async (
     message: MessageToSend<DefaultStreamChatGenerics>
   ) => {
@@ -207,72 +264,41 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   if (!channel) return <div>Loading chat...</div>;
 
   return (
-    <StreamChatComponent client={client!} theme="messaging light">
-      <Channel channel={channel}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: 'calc(100% - env(safe-area-inset-bottom))', // Updated line
-            width: '100vw',
-            maxWidth: '100%',
-            margin: 0,
-            padding: 0,
-            boxSizing: 'border-box',
-          }}
-        >
+    <div style={{ display: 'flex', height: '100vh' }}>
+      {/* Sidebar */}
+      <div style={{ width: '250px', background: '#f4f4f4', padding: '20px', boxSizing: 'border-box' }}>
+        <h3>Loopin AI Shopping Assistant can help you with</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {options.map((option) => (
+            <li
+              key={option.label}
+              style={{
+                padding: '10px',
+                margin: '10px 0',
+                cursor: 'pointer',
+                background: selectedOption === option.label ? '#ddd' : '#fff',
+                borderRadius: '5px',
+              }}
+              onClick={() => handleOptionClick(option)}
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Chat Component */}
+      <StreamChatComponent client={client!} theme="messaging light">
+        <Channel channel={channel}>
           <Window>
             <ChannelHeader />
-            <div
-              className="chat-content"
-              style={{
-                flex: 1,
-                overflowY: 'scroll', // Ensures scrolling if content overflows
-                padding: '10px',
-                paddingBottom: '50px', 
-                display: 'flex',
-                flexDirection: 'column',
-                height: 'calc(100vh - env(safe-area-inset-bottom) - 70px)', // Adjust height based on input box
-                maxHeight: 'calc(100vh - env(safe-area-inset-bottom) - 70px)',
-                boxSizing: 'border-box',
-              }}
-            >
-              <MessageList Message={CustomMessage} />
-            </div>
-
-
-            {isBotTyping && (
-              <div style={{ 
-                padding: '10px', 
-                color: '#555', 
-                textAlign: 'left',
-                position: 'fixed',
-                bottom: '70px', // Place it above the input box
-                }}>
-                {"AI assistant is typing..."}
-              </div>
-            )}
-
-            <div
-              style={{
-                position: 'fixed',
-                bottom: 'env(safe-area-inset-bottom)',
-                left: 0,
-                right: 0,
-                background: '#fff',
-                padding: '8px 10px',
-                paddingBottom: 'env(safe-area-inset-bottom)',
-                borderTop: '1px solid #ddd',
-                width: '100%',
-                boxSizing: 'border-box',
-                zIndex: 10, // Ensure it stays above other content
-              }}
-            >
-              <MessageInput overrideSubmitHandler={handleMessageSubmit} />
-            </div>
+            <MessageList Message={CustomMessage} />
+            {isBotTyping && <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>}
+            <MessageInput overrideSubmitHandler={handleMessageSubmit} />
           </Window>
-        </div>
-      </Channel>
-    </StreamChatComponent>
+        </Channel>
+      </StreamChatComponent>
+    </div>
   );
+
 };

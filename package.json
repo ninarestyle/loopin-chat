@@ -22,6 +22,8 @@
     "stream-chat-react": "^12.3.0"
   },
   "devDependencies": {
+    "@types/gapi": "^0.0.47",
+    "@types/gapi.auth2": "^0.0.61",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
