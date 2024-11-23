@@ -64,7 +64,7 @@ const CustomMessage: React.FC = () => {
                   style={{ display: 'inline-block', textDecoration: 'none' }}
                 >
                   <img
-                    src={attachment.image_url || 'https://cdn-images.farfetch-contents.com/23/95/98/93/23959893_54010053_1000.jpg'}
+                    src={attachment.image_url || 'https://loopin.me/'}
                     alt={attachment.title || 'Image'}
                     style={{
                       width: '100%',

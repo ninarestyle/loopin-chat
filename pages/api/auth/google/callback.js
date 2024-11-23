@@ -10,27 +10,61 @@ export default function handler ( req, res )
       return res.status( 401 ).json( { error: 'Authentication failed. Please try again.' } );
     }
 
+
     // Extract tokens and user information
     const accessToken = user?.accessToken || '';
     const idToken = user?.idToken || '';
-    const profileURL = user?.photos?.[ 0 ]?.value || '';
     const refreshToken = user?.refreshToken || '';
+    const email = user?.emails?.[ 0 ]?.value || '';
 
-    console.log( "handler refresh token", idToken );
-    if ( !idToken )
-    {
-      console.error( 'ID token is missing. Cannot proceed without it.' );
-      return res.status( 401 ).json( { error: 'Authentication failed. Missing ID token.' } );
+    const { state } = req.query;
+    let redirectUrl = '/'; // Default redirect
+    let type = 'basic'; // Default type
+
+    if (state) {
+      try {
+        const parsedState = JSON.parse(state);
+        redirectUrl = parsedState.redirectUrl || '/';
+        type = parsedState.type || 'basic';
+      } catch (error) {
+        console.error('Error parsing state:', error);
+      }
     }
 
-    if ( !accessToken )
+    // For basic authentication, ensure we have an ID token
+    if ( type === 'basic' )
     {
-      console.error( `access token is missing, cannot proceed without it` );
+      if ( !idToken )
+      {
+        console.error( 'ID token is missing for basic authentication.' );
+        return res.status( 401 ).json( { error: 'Authentication failed. Missing ID token.' } );
+      }
+
+      // Redirect to the specified `redirectUrl` with basic user details
+      const authenticatedURL = `${redirectUrl}?idToken=${encodeURIComponent( idToken )}&type=${encodeURIComponent( type )}`;
+      res.redirect(
+        authenticatedURL
+      );
+      console.log("authenticatedURL", authenticatedURL)
+      return authenticatedURL;
     }
 
-    // Redirect to the front-end success page with query params
-    res.redirect(
-      `/auth/success?accessToken=${encodeURIComponent( accessToken )}&idToken=${encodeURIComponent( idToken )}}&refreshToken=${encodeURIComponent( refreshToken )}&profileURL=${encodeURIComponent( profileURL )}`
-    );
+    // For Gmail access, ensure access and refresh tokens are present
+    if ( type === 'gmail' )
+    {
+      if ( !accessToken || !refreshToken )
+      {
+        console.error( 'Access or refresh token is missing for Gmail scope.' );
+        return res.status( 401 ).json( { error: 'Authentication failed. Missing required tokens for Gmail scope.' } );
+      }
+      // Redirect to the specified `redirectUrl` with all tokens
+      return res.redirect(
+        `${redirectUrl}?accessToken=${encodeURIComponent( accessToken )}&refreshToken=${encodeURIComponent( refreshToken )}&idToken=${encodeURIComponent( idToken )}&email=${encodeURIComponent( email )}&type=${encodeURIComponent( type )}`
+      );
+    }
+
+    // Handle unknown `type` values
+    console.error( 'Invalid type parameter in authentication callback:', type );
+    return res.status( 400 ).json( { error: 'Invalid authentication type. Please try again.' } );
   } )( req, res );
 }

@@ -38,42 +38,45 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   const [messageCount, setMessageCount] = useState<number>(0);
   const [isChatInitializing, setIsChatInitializing] = useState<boolean>(false);
   const [isBotTyping, setIsBotTyping] = useState<boolean>(false);
-  //const [selectedOption, setSelectedOption] = useState<string>('Magasin');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   const toggleSidebar = () => {
-      setIsSidebarCollapsed(!isSidebarCollapsed);
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
-  // // Function to handle Gmail promotions integration
-  // const manageGmailPromotions = async () => {
-  //   try {
-  //     // Check if the user is already authenticated
-  //     const jwtToken = localStorage.getItem('jwtToken');
-  //     // Check if the user is already authenticated
-  //     const accessTokenAvailable = localStorage.getItem('accessTokenAvailable');
-  //     // User is not logged in, redirect them to Google OAuth login
-  //     const currentUrl = window.location.href;
+  // Function to handle Gmail promotions integration
+  const manageGmailPromotions = async () => {
+    try {
+      // Check if the user is already authenticated
+      const jwtToken = localStorage.getItem('jwtToken');
+      // Check if the user is already authenticated
+      const accessTokenAvailable = localStorage.getItem('accessTokenAvailable');
 
-  //     if (!jwtToken) {
-  //       alert("Please log in first to continue managing Gmail promotions.")
-  //       // Redirect to Google OAuth login with the current URL as redirectUrl
-  //       window.location.href = `/api/auth/google?redirectUrl=${encodeURIComponent(currentUrl)}`;
-  //       return;
-  //     }
-  //     // User is logged in, proceed with requesting Gmail API access
-  //     if (!accessTokenAvailable) {
-  //       alert("Redirecting you to grant Gmail API access.");
-  //       const baseUrl = window.location.origin; 
-  //       const redirectUrl = `${baseUrl}/deals`; 
-        
-  //       window.location.href = `/api/auth/google/incremental?redirectUrl=${encodeURIComponent(redirectUrl)}`;
-  //     }
+      if (!jwtToken) {
+        alert("Please log in first to continue managing Gmail promotions.");
 
-  //   } catch (error) {
-  //     console.error('Error during Gmail integration:', error);
-  //     alert('Failed to integrate Gmail. Please try again.');
-  //   }
-  // };
+        // Redirect to Google OAuth login for basic authentication
+        const redirectUrl = `/auth/success`;
+        const googleLoginUrl = `/api/auth/google?type=gmail&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+        window.location.href = googleLoginUrl;
+        return;
+      }
+
+      // User is logged in, proceed with requesting Gmail API access
+      if (!accessTokenAvailable) {
+        alert("Redirecting you to grant Gmail API access.");
+
+        // Redirect to the incremental Gmail OAuth flow
+        const redirectUrl = `/auth/success`;
+        const googleLoginUrl = `/api/auth/google?type=gmail&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+        window.location.href = googleLoginUrl;
+        return;
+      }
+
+    } catch (error) {
+      console.error('Error during Gmail integration:', error);
+      alert('Failed to integrate Gmail. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const adjustContentHeight = () => {
@@ -95,7 +98,6 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
       window.removeEventListener('resize', adjustContentHeight);
     };
   }, []);
-
 
   // Initialize chat when the influencerName changes
   useEffect(() => {
@@ -190,23 +192,20 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   const options = [
     { label: 'Discover recommendations from Magasin', route: '/magasin' },
     { label: `Check out JunJun's favorites`, route: '/junjunsquare' },
-    // { label: 'Manage 2024 holiday promotions', route: '/deals', action: manageGmailPromotions },
+    { label: 'Manage 2024 holiday promotions', route: '/deals', action: manageGmailPromotions },
   ];
 
   // Handle option clicks
   const handleOptionClick = async (option: typeof options[number]) => {
     // Call the action if it exists (e.g., manageGmailPromotions)
-    // if (option.action) {
-    //   await option.action();
-    // }
+    if (option.action) {
+      await option.action();
+    }
 
     // Navigate to the associated route
     router.push(option.route);
-
-    // Update the selected option
-    //setSelectedOption(option.label);
   };
-  
+
   const handleMessageSubmit = async (
     message: MessageToSend<DefaultStreamChatGenerics>
   ) => {
@@ -215,9 +214,14 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
     const text = message.text || "";
     const attachments = message.attachments || [];
 
-    if (!isAuthenticated && messageCount >= 5) {
+    // Redirect to Google OAuth dynamically based on type
+    if (!isAuthenticated && messageCount >= 0) {
       alert("You’ve reached the limit of messages as a guest. Please log in to continue chatting.");
-      window.location.href = "/api/auth/google";
+
+      const originalUrl = window.location.href; // Capture the current URL
+      const redirectUrl = `/auth/success`;
+      const googleLoginUrl = `/api/auth/google?type=basic&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+      window.location.href = googleLoginUrl;
       return;
     }
 
@@ -267,53 +271,53 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
   if (!channel) return <div>Loading chat...</div>;
   return (
     <div style={{ height: '100vh', display: 'flex', position: 'relative' }}>
-        {/* Sidebar */}
-        <div className={`sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`}>
-            <h3>Options</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                {options.map((option) => (
-                    <li
-                        key={option.label}
-                        style={{
-                            padding: '10px',
-                            margin: '10px 0',
-                            cursor: 'pointer',
-                            background: '#fff',
-                            borderRadius: '5px',
-                        }}
-                        onClick={() => handleOptionClick(option)}
-                    >
-                        {option.label}
-                    </li>
-                ))}
-            </ul>
-        </div>
+      {/* Sidebar */}
+      <div className={`sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`}>
+        <h3>Options</h3>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          {options.map((option) => (
+            <li
+              key={option.label}
+              style={{
+                padding: '10px',
+                margin: '10px 0',
+                cursor: 'pointer',
+                background: '#fff',
+                borderRadius: '5px',
+              }}
+              onClick={() => handleOptionClick(option)}
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        {/* Chat Content */}
-        <div className={`chat-container ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-            <StreamChatComponent client={client!} theme="messaging light">
-                <Channel channel={channel}>
-                    <Window>
-                        <ChannelHeader />
-                        <MessageList Message={CustomMessage} />
-                        {isBotTyping && (
-                            <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>
-                        )}
-                        <MessageInput overrideSubmitHandler={handleMessageSubmit} />
-                    </Window>
-                </Channel>
-            </StreamChatComponent>
-        </div>
+      {/* Chat Content */}
+      <div className={`chat-container ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+        <StreamChatComponent client={client!} theme="messaging light">
+          <Channel channel={channel}>
+            <Window>
+              <ChannelHeader />
+              <MessageList Message={CustomMessage} />
+              {isBotTyping && (
+                <div style={{ padding: '10px', color: '#555' }}>AI assistant is typing...</div>
+              )}
+              <MessageInput overrideSubmitHandler={handleMessageSubmit} />
+            </Window>
+          </Channel>
+        </StreamChatComponent>
+      </div>
 
-        {/* Sidebar Toggle Button */}
-        <div
-            className="sidebar-toggle"
-            onClick={toggleSidebar}
-            title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-        >
-            {isSidebarCollapsed ? '☰' : '×'}
-        </div>
+      {/* Sidebar Toggle Button */}
+      <div
+        className="sidebar-toggle"
+        onClick={toggleSidebar}
+        title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+      >
+        {isSidebarCollapsed ? '☰' : '×'}
+      </div>
     </div>
-);
+  );
 
 };

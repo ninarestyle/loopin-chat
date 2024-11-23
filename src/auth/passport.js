@@ -25,7 +25,6 @@ passport.use(
         } else {
           console.error('Profile is not defined');
         }
-
         return done(null, profile);
       } catch (error) {
         console.error('Error in Google strategy callback:', error);
