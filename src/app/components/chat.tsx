@@ -218,7 +218,6 @@ export const Chat: React.FC<{ influencerName: string; imageUrl: string }> = ({ i
     if (!isAuthenticated && messageCount >= 0) {
       alert("You’ve reached the limit of messages as a guest. Please log in to continue chatting.");
 
-      const originalUrl = window.location.href; // Capture the current URL
       const redirectUrl = `/auth/success`;
       const googleLoginUrl = `/api/auth/google?type=basic&redirectUrl=${encodeURIComponent(redirectUrl)}`;
       window.location.href = googleLoginUrl;
