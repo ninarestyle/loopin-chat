@@ -2,6 +2,14 @@ import passport from '../../../../src/auth/passport';
 
 export default function handler ( req, res )
 {
+  const { code } = req.query;
+  // If 'code' is missing, assume the user/tester accessed the URL directly
+  if ( !code )
+  {
+    console.log( "Direct access to the callback URL detected. Redirecting to OAuth flow." );
+    return res.redirect( `/api/auth/google?type=basic&redirectUrl=${encodeURIComponent( '/auth/success' )}` );
+  }
+
   passport.authenticate( 'google', { session: false, failureRedirect: '/login' }, ( err, user ) =>
   {
     if ( err || !user )
@@ -21,13 +29,16 @@ export default function handler ( req, res )
     let redirectUrl = '/'; // Default redirect
     let type = 'basic'; // Default type
 
-    if (state) {
-      try {
-        const parsedState = JSON.parse(state);
+    if ( state )
+    {
+      try
+      {
+        const parsedState = JSON.parse( state );
         redirectUrl = parsedState.redirectUrl || '/';
         type = parsedState.type || 'basic';
-      } catch (error) {
-        console.error('Error parsing state:', error);
+      } catch ( error )
+      {
+        console.error( 'Error parsing state:', error );
       }
     }
 
@@ -45,7 +56,7 @@ export default function handler ( req, res )
       res.redirect(
         authenticatedURL
       );
-      console.log("authenticatedURL", authenticatedURL)
+      console.log( "authenticatedURL", authenticatedURL )
       return authenticatedURL;
     }
 
